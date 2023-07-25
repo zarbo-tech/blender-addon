@@ -18,7 +18,7 @@ _В качестве платформы для хранения и визуал�
 
 <table>
   <tr>
-    <td><img src="https://github.com/zarbo-tech/blender-addon/assets/37938498/e0be8312-3cef-4443-9178-1abdf4fd8dd6" width="300"></td>
+    <td><img src="https://github.com/zarbo-tech/blender-addon/assets/37938498/e367b211-df4d-4549-81e6-bf3ed6b4dc6c" width="300"></td>
     <td>
       <p>Чтобы посмотреть в AR <b>выделенные объекты</b> сцены:</p>
       <ul>
@@ -28,7 +28,7 @@ _В качестве платформы для хранения и визуал�
     </td>
   </tr>
   <tr>
-    <td><img src="https://github.com/zarbo-tech/blender-addon/assets/37938498/88e81b3a-5c0b-4e64-b5b0-0adac27c089b" width="300"></td>
+    <td><img src="https://github.com/zarbo-tech/blender-addon/assets/37938498/4eaefa98-3f8b-457a-9fab-648aa5159f89" width="300"></td>
     <td>
       <ul>
         <li>Нажмите на кнопку "Примерить"</li>
@@ -42,7 +42,7 @@ _В качестве платформы для хранения и визуал�
 
 <table>
   <tr>
-    <td><img src="https://github.com/zarbo-tech/blender-addon/assets/37938498/c4315b9f-b08a-4fa6-8643-8600fa603df8" width="300"></td>
+    <td><img src="https://github.com/zarbo-tech/blender-addon/assets/37938498/40dffe57-0634-4135-a2f3-f551a4812b73" width="300"></td>
     <td>
       <p>Расширенные настройки позволяют:</p>
       <ul>
