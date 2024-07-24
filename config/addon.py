@@ -1,0 +1,1 @@
+addon_bl_idname = 'blender-addon'

@@ -6,7 +6,7 @@ class ZarboApiConfig:
 
     @property
     def host(self):
-        return os.environ.get('ZARBO_API_HOST', 'https://api.zarbo.tech/')
+        return os.environ.get('ZARBO_API_HOST', 'https://api.zarbo.tech/')  # TODO не забыть поставить прод
 
     @property
     def auth(self):

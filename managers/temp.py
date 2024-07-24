@@ -6,6 +6,7 @@ class TempManager:
     dirmaker_class = tempfile.TemporaryDirectory
     dirmaker_instance = None
     _instances = {}
+    # bpy.app.tempdir
 
     def __new__(cls, *args, **kwargs):
         if cls not in cls._instances:

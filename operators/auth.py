@@ -1,6 +1,7 @@
 import bpy
 from bpy.types import Operator
-from ..managers.zarbo import ZarboManager
+from ..managers.api import APIManager
+from ..config.addon import addon_bl_idname
 
 
 class AuthOperator(Operator):
@@ -10,9 +11,10 @@ class AuthOperator(Operator):
     bl_description = "Проверка токена"
 
     def execute(self, context):
-        bpy.context.scene['zarbo_access_token'] = 'Api-Key ' + bpy.context.scene['zarbo_user_pass']
-        ZarboManager.validate_api_key()
+        bpy.context.preferences.addons[addon_bl_idname].preferences.api_key = 'Api-Key ' + bpy.context.scene['zarbo_user_pass']
+        APIManager.validate_api_key()
         bpy.context.scene.show_api_key = False
+        del bpy.context.scene['zarbo_user_pass']  # TODO избавиться от хранения в сцене, передавая напрямую в prefs
         return {'FINISHED'}
 
 
