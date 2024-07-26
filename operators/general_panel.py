@@ -14,7 +14,7 @@ class ZarboPanel(bpy.types.Panel):
 
         scene = context.scene
 
-        layout.prop(context.scene, 'select_file')
+        # layout.prop(context.scene, 'select_file')
 
         # if scene.select_file:
         #     box = layout.box()

@@ -1,16 +1,14 @@
 import uuid
-
 import bpy
 from bpy.types import Operator
 
 from .data_group import get_data_container
 from ..managers.api import APIManager
 
-
 class UpdateProductsOperator(Operator):
     """ Оператор обновления содержимого """
     bl_idname = "object.update_products"
-    bl_label = "Обновить продукты"
+    bl_label = "Получить продукты"
     bl_description = "Запрос к серверу для получения списка Продуктов вашего личного кабинета"
 
     def execute(self, context):

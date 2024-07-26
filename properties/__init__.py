@@ -24,10 +24,10 @@ def register_props():
                                                           description="Откройте на вашем смартфоне")
     attrs.append(bpy.types.Scene.widget_url)
 
-    bpy.types.Scene.select_file = bpy.props.BoolProperty(name="Загрузить файл с диска", default=False,
-                                                         description="Если не поставить галочку, то будут отправлены "
-                                                                     "выделенные объекты сцены")
-    attrs.append(bpy.types.Scene.select_file)
+    # bpy.types.Scene.select_file = bpy.props.BoolProperty(name="Загрузить файл с диска", default=False,
+    #                                                      description="Если не поставить галочку, то будут отправлены "
+    #                                                                  "выделенные объекты сцены")
+    # attrs.append(bpy.types.Scene.select_file)
 
     bpy.types.Scene.show_api_key = bpy.props.BoolProperty(name="Button Pressed", default=True)
     attrs.append(bpy.types.Scene.show_api_key)

@@ -11,11 +11,12 @@ class SendFileOperator(Operator):
     bl_description = "Отправить файл в личный кабинет и получить ссылку"
 
     def execute_old(self, context):
-        if context.scene.select_file:
-            #            send_by_path = bool(bpy.context.scene.get('zarbo_file_content'))
-            send_by_path = True
-        else:
-            send_by_path = False
+        # if context.scene.select_file:
+        #     #            send_by_path = bool(bpy.context.scene.get('zarbo_file_content'))
+        #     send_by_path = True
+        # else:
+        #     send_by_path = False
+        send_by_path = False
 
         if not context.scene.use_manage_menu:
             collections_list = APIManager.get_collection()
@@ -35,7 +36,8 @@ class SendFileOperator(Operator):
             temp_manager = TempManager()
             filepath = os.path.join(temp_manager.get_dirname(), 'test.glb')
             bpy.context.scene['zarbo_file_name'] = filepath
-            bpy.ops.export_scene.gltf(export_format='GLB', filepath=filepath)
+            use_selection = False if self.export_param == 'all' else True
+            bpy.ops.export_scene.gltf(export_format='GLB', filepath=filepath, use_selection=use_selection)
             with open(filepath, 'rb') as f:
                 model = APIManager.create_model(product_id, f.read())
             temp_manager.cleanup()
@@ -47,5 +49,5 @@ class SendFileOperator(Operator):
 
     def execute(self, context):
         widget, _ = APIManager.get_or_create_widget(context.scene.products_enum)
-        self.report({'ERROR'}, str(widget))
         context.scene.widget_url = APIManager.get_render_url(widget['id'])
+        return {'FINISHED'}

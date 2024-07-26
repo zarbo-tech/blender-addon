@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import bpy, os
 from bpy.types import Operator
 
@@ -15,13 +17,15 @@ def update_visibility(self, context):
     elif self.export_param == 'selected':
         ...
     else:
-        bpy.ops.object.select_all()
+        bpy.ops.object.select_all(action='DESELECT')
+        for obj in context.scene.objects:
+            obj.select_set(True)
 
 
 class UpdateModelsOperator(Operator):
     """ Оператор обновления содержимого """
     bl_idname = "object.update_models"
-    bl_label = "Обновить модели"
+    bl_label = "Получить модели"
     bl_description = "Запрос к серверу для получения списка Моделей вашего личного кабинета"
 
     def execute(self, context):
@@ -73,15 +77,16 @@ class CreateModelPopupOperator(Operator):
         items = [
             (str(item.get('id')), item.get('name'), 'test') for item in models
         ]
-        bpy.types.Scene.models_enum = bpy.props.EnumProperty(name="Коллекция",
+        bpy.types.Scene.models_enum = bpy.props.EnumProperty(name="Модель",
                                                              items=items,
                                                              default=selected_object)
 
     def execute(self, context):
         temp_manager = TempManager()
-        filepath = os.path.join(temp_manager.get_dirname(), 'test.glb')
+        filepath = os.path.join(temp_manager.get_dirname(), f'{self.zarbo_model_name} {datetime.now().strftime("%d.%m %H:%M")}.glb')
         bpy.context.scene['zarbo_file_name'] = filepath
-        bpy.ops.export_scene.gltf(export_format='GLB', filepath=filepath)
+        use_selection = False if self.export_param == 'all' else True
+        bpy.ops.export_scene.gltf(export_format='GLB', filepath=filepath, use_selection=use_selection)
         with open(filepath, 'rb') as f:
             model, _ = APIManager.create_model(context.scene.products_enum, f.read(), self.zarbo_model_name)
         temp_manager.cleanup()
@@ -109,7 +114,7 @@ class CreateModelPopupOperator(Operator):
 class UpdateModelOperator(Operator):
     """ Кнопка открытия попапа """
     bl_idname = "object.update_model"
-    bl_label = "Заменить модель"
+    bl_label = "Обновить модель"
     bl_description = "Запрос к серверу для замены Модели вашего личного кабинета"
 
     def execute(self, context):
@@ -138,11 +143,14 @@ class UpdateModelPopupOperator(Operator):
 
     def execute(self, context):
         temp_manager = TempManager()
-        filepath = os.path.join(temp_manager.get_dirname(), 'test.glb')
+        model, _ = APIManager.get_model(context.scene.models_enum)
+        filename = f'{model["name"]} {datetime.now().strftime("%d.%m %H:%M")}.glb'
+        filepath = os.path.join(temp_manager.get_dirname(), filename)
         bpy.context.scene['zarbo_file_name'] = filepath
-        bpy.ops.export_scene.gltf(export_format='GLB', filepath=filepath)
+        use_selection = False if self.export_param == 'all' else True
+        bpy.ops.export_scene.gltf(export_format='GLB', filepath=filepath, use_selection=use_selection)
         with open(filepath, 'rb') as f:
-            model, errors = APIManager.update_model(context.scene.models_enum, f.read())
+            model, errors = APIManager.update_model(context.scene.models_enum, f.read(), filename)
         temp_manager.cleanup()
         if errors:
             self.report({'ERROR'}, errors)

@@ -1,7 +1,7 @@
 import bpy, os, uuid
 from ..config import api_config
 from ..managers.request import RequestManager
-
+from datetime import datetime
 
 class APIManager:
     """ Набор методов взаимодействия с АПИ """
@@ -21,7 +21,6 @@ class APIManager:
 
         if not errors:
             return None
-
         if errors:
             def oops(self, context):
                 self.layout.label(text=errors + '\n' + str(extra_data) + '\n' + str(response.request))
@@ -34,9 +33,9 @@ class APIManager:
         name = name or 'Без названия'
         product_id = product_id if product_id else bpy.context.scene.products_enum
         file = file if file else bpy.context.scene['zarbo_file_content']
-
         filepath = bpy.context.scene['zarbo_file_name']
-        data = {'file': 'test', 'product_id': product_id, 'name': name}
+        filename = os.path.basename(bpy.context.scene['zarbo_file_name'])
+        data = {'file': filename, 'product_id': product_id, 'name': name}
         _, ext = os.path.splitext(filepath)
         if ext == '.usdz':
             additional_data = 'ar_ios'
@@ -46,7 +45,6 @@ class APIManager:
 
         APIManager.reset_all_models_additional_data(product_id)
 
-        filename = os.path.basename(bpy.context.scene['zarbo_file_name'])
         response = RequestManager.request('POST', api_config.models, data=data, files={'file': (filename, file)})
         # assert response.status_code == 201, f"Ошибка: %s" % response.json().get('detail')
         errors = APIManager.check_errors(response)
@@ -57,7 +55,12 @@ class APIManager:
         response = RequestManager.request('GET', api_config.models + '?product=' + str(product_id))
         # assert response.status_code == 200, f"Ошибка: %s" % response.json().get('detail')
         errors = APIManager.check_errors(response)
-        return response.json().get('results'), errors
+        result_response = response.json()
+        if isinstance(result_response, dict):
+            return response.json().get('results', []), errors
+        else:
+            return response.json(), errors
+
 
     @staticmethod
     def reset_all_models_additional_data(product_id):
@@ -110,7 +113,11 @@ class APIManager:
         # assert response.status_code == 200, f"Ошибка: %s" % response.json().get('detail')
         # return response.json().get('results')
         errors = APIManager.check_errors(response)
-        return response.json().get('results'), errors
+        result_response = response.json()
+        if isinstance(result_response, dict):
+            return response.json().get('results', []), errors
+        else:
+            return response.json(), errors
 
     @staticmethod
     def get_collection_list():
@@ -169,16 +176,25 @@ class APIManager:
         return response.json()['results'], errors
 
     @staticmethod
-    def update_model(model_id, file):
-        response = RequestManager.request('PATCH',
-                                          api_config.models + str(model_id) + '/',
-                                          data={'file': 'test.glb'},
-                                          # headers=http_headers,
-                                          files={'file': ('test.glb', file)})
-
-        def oops(self, context):
-            self.layout.label(text=str(response.__dict__))
-
-        bpy.context.window_manager.popup_menu(oops, title="Error", icon='ERROR')
+    def get_model(model_id):
+        response = RequestManager.request('GET', api_config.models + "%s/" % model_id)
         errors = APIManager.check_errors(response)
         return response.json(), errors
+
+    @staticmethod
+    def update_model(model_id, file, name="test.glb"):
+        model, _ = APIManager.get_model(model_id)
+        if model and model.get("product_id"):
+            APIManager.reset_all_models_additional_data(model.get("product_id"))
+            response = RequestManager.request('PATCH',
+                  api_config.models + str(model_id) + '/',
+                  data={'file': name, "additional_data": "3d ar_android ar_ios"},
+                  # headers=http_headers,
+                  files={'file': (name, file)})
+
+            def oops(self, context):
+                self.layout.label(text=str(response.__dict__))
+
+            bpy.context.window_manager.popup_menu(oops, title="Error", icon='ERROR')
+            errors = APIManager.check_errors(response)
+            return response.json(), errors
