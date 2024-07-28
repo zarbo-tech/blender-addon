@@ -56,6 +56,10 @@ class ZarboPanel(bpy.types.Panel):
         row.operator('object.update_model')
         row.operator('object.create_model')
 
+        if scene.my_image:
+            layout.template_ID_preview(scene, "my_image", open="image.open")
+        else:
+            layout.operator("image.load_zarbo_image", text="Загрузить превью продукта")
 
         # else:
         #     box = layout.box()

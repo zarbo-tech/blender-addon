@@ -1,8 +1,15 @@
 import bpy
 from ..operators.data_group import DataContainer
+import os
 
 attrs = []
 
+def get_addon_directory():
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+def update_selected_product(self, context):
+    if context.scene.products_enum:
+        bpy.ops.image.update_image()
 
 def register_props():
     bpy.types.Scene.zarbo_data_container = bpy.props.CollectionProperty(type=DataContainer)
@@ -36,7 +43,8 @@ def register_props():
                                                            description="Выберите продукт. "
                                                                        "Если не понимаете о чем речь, "
                                                                        "то просто уберите галочку "
-                                                                       "Расширенные настройки")
+                                                                       "Расширенные настройки",
+                                                           update=update_selected_product)
     attrs.append(bpy.types.Scene.products_enum)
 
     bpy.types.Scene.zarbo_user_pass = bpy.props.StringProperty(name="Api-Key",
@@ -50,6 +58,15 @@ def register_props():
                                                                           "то просто уберите галочку "
                                                                           "Расширенные настройки")
     attrs.append(bpy.types.Scene.models_enum)
+
+    bpy.types.Scene.path_image = bpy.props.StringProperty(name="Путь до картинки",
+                                                          description="Путь до превью, чтобы отобразить картинку",
+                                                          default=os.path.join(get_addon_directory(), 'logo.png'))
+    attrs.append(bpy.types.Scene.path_image)
+
+    bpy.types.Scene.my_image = bpy.props.PointerProperty(type=bpy.types.Image)
+    attrs.append(bpy.types.Scene.my_image)
+
 
 
 def unregister_props():

@@ -103,12 +103,19 @@ class APIManager:
         return response.json(), errors
 
     @staticmethod
+    def get_product(product_id: int):
+        response = RequestManager.request('GET', api_config.products + "%s/" % product_id)
+        errors = APIManager.check_errors(response)
+        return response.json(), errors
+
+    @staticmethod
     def get_product_list(collection_key=None, collection_id=None):
         if collection_id:
             response, _ = APIManager.get_collection(collection_id)
             collection_key = response['key']
         url = api_config.products + '?limit=9999999&offset=0'
-        url += '&collections=%s' % collection_key
+        if collection_key:
+            url += '&collections=%s' % collection_key
         response = RequestManager.request('GET', url)
         # assert response.status_code == 200, f"Ошибка: %s" % response.json().get('detail')
         # return response.json().get('results')

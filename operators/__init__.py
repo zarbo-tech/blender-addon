@@ -6,6 +6,7 @@ from .file_sender import SendFileOperator
 # from .file_loader import FileLoaderOperator
 from .api_key import ResetApiKeyOperator
 from .collection import CreateCollectionOperator, CreateCollectionPopupOperator, UpdateCollectionsOperator
+from .preview import LoadZarboImage, UpdateImageOperator
 from .product import CreateProductOperator, CreateProductPopupOperator, UpdateProductsOperator
 from .models import UpdateModelsOperator, CreateModelsOperator, CreateModelPopupOperator, UpdateModelOperator, UpdateModelPopupOperator
 
@@ -23,7 +24,8 @@ registered_operators = [
     CreateCollectionPopupOperator,
     CreateProductPopupOperator,
     CreateProductOperator,
-    UpdateModelsOperator, CreateModelsOperator, CreateModelPopupOperator,UpdateModelOperator, UpdateModelPopupOperator
+    UpdateModelsOperator, CreateModelsOperator, CreateModelPopupOperator,UpdateModelOperator, UpdateModelPopupOperator,
+    LoadZarboImage, UpdateImageOperator
 ]
 
 registered_props = [

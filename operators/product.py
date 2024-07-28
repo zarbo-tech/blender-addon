@@ -2,6 +2,7 @@ import uuid
 import bpy
 from bpy.types import Operator
 
+from ..properties import update_selected_product
 from .data_group import get_data_container
 from ..managers.api import APIManager
 
@@ -19,9 +20,14 @@ class UpdateProductsOperator(Operator):
         items = [
             (str(item.get('id')), item.get('name'), 'test') for item in products
         ]
-        bpy.types.Scene.products_enum = bpy.props.EnumProperty(name="Продукт", items=items)
+        bpy.types.Scene.products_enum = bpy.props.EnumProperty(name="Продукт", items=items,
+                                                               description="Выберите продукт. "
+                                                                           "Если не понимаете о чем речь, "
+                                                                           "то просто уберите галочку "
+                                                                           "Расширенные настройки",
+                                                               update=update_selected_product)
+        bpy.ops.image.update_image()
         return {'FINISHED'}
-
 
 class CreateProductOperator(Operator):
     """ Кнопка открытия попапа """
