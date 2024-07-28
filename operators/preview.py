@@ -29,7 +29,6 @@ class LoadZarboImage(bpy.types.Operator):
     bl_label = "Открыть превью продукта"
 
     def execute(self, context):
-        print("class LoadZarboImage")
         # Загружаем изображение
         img_path = None
         if context.scene.products_enum:
@@ -52,7 +51,6 @@ class UpdateImageOperator(bpy.types.Operator):
     bl_label = "Update Image"
 
     def execute(self, context):
-        print("class UpdateImageOperator")
         img_path = None
         product, _ = APIManager.get_product(context.scene.products_enum)
         if product["preview"]:
