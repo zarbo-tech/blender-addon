@@ -25,7 +25,7 @@ registered_operators = [
     CreateProductPopupOperator,
     CreateProductOperator,
     UpdateModelsOperator, CreateModelsOperator, CreateModelPopupOperator,UpdateModelOperator, UpdateModelPopupOperator,
-    LoadZarboImage, UpdateImageOperator
+    LoadZarboImage, UpdateImageOperator,
 ]
 
 registered_props = [

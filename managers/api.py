@@ -97,8 +97,8 @@ class APIManager:
         response = RequestManager.request('POST', api_config.products,
                                           data={
                                               'collection_id': collection_id,
-                                              'guid': name,
-                                              'name': guid
+                                              'guid': guid,
+                                              'name': name
                                           })
         # assert response.status_code == 201, f"Ошибка: %s" % response.json().get('detail')
         # return response.json()
@@ -113,6 +113,7 @@ class APIManager:
 
     @staticmethod
     def get_product_list(collection_key=None, collection_id=None, blender_q=None):
+        print(api_config.products)
         if collection_id:
             response, _ = APIManager.get_collection(collection_id)
             collection_key = response['key']

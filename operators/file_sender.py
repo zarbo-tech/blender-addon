@@ -50,4 +50,6 @@ class SendFileOperator(Operator):
     def execute(self, context):
         widget, _ = APIManager.get_or_create_widget(context.scene.products_enum)
         context.scene.widget_url = APIManager.get_render_url(widget['id'])
+        bpy.context.window_manager.clipboard = context.scene.widget_url
+        self.report({'INFO'}, "Ссылка скопирована в буфер обмена")
         return {'FINISHED'}

@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 import bpy, os
@@ -83,7 +84,7 @@ class CreateModelPopupOperator(Operator):
 
     def execute(self, context):
         temp_manager = TempManager()
-        filepath = os.path.join(temp_manager.get_dirname(), f'{self.zarbo_model_name} {datetime.now().strftime("%d.%m %H:%M")}.glb')
+        filepath = os.path.join(temp_manager.get_dirname(), f'{uuid.uuid4()}.glb')
         bpy.context.scene['zarbo_file_name'] = filepath
         use_selection = False if self.export_param == 'all' else True
         bpy.ops.export_scene.gltf(export_format='GLB', filepath=filepath, use_selection=use_selection)
@@ -147,8 +148,7 @@ class UpdateModelPopupOperator(Operator):
 
     def execute(self, context):
         temp_manager = TempManager()
-        model, _ = APIManager.get_model(context.scene.models_enum)
-        filename = f'{model["name"]} {datetime.now().strftime("%d.%m %H:%M")}.glb'
+        filename = f'{uuid.uuid4()}.glb'
         filepath = os.path.join(temp_manager.get_dirname(), filename)
         bpy.context.scene['zarbo_file_name'] = filepath
         use_selection = False if self.export_param == 'all' else True
