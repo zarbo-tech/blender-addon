@@ -1,29 +1,37 @@
 import uuid
-
 import bpy
 from bpy.types import Operator
 
+from ..properties import update_selected_product
 from .data_group import get_data_container
 from ..managers.api import APIManager
-
 
 class UpdateProductsOperator(Operator):
     """ Оператор обновления содержимого """
     bl_idname = "object.update_products"
-    bl_label = "Обновить продукты"
+    bl_label = "Получить продукты"
     bl_description = "Запрос к серверу для получения списка Продуктов вашего личного кабинета"
 
     def execute(self, context):
+        print(context.scene.product_search)
         # access_token = bpy.context.scene['zarbo_access_token']
         # container = get_data_container('upload')
         # key = container.collection_key = container.collection_key or context.scene.collections_enum
-        products, errors = APIManager.get_product_list(collection_id=context.scene.collections_enum)
+        products, errors = APIManager.get_product_list(
+            collection_id=context.scene.collections_enum,
+            blender_q=context.scene.product_search
+        )
         items = [
             (str(item.get('id')), item.get('name'), 'test') for item in products
         ]
-        bpy.types.Scene.products_enum = bpy.props.EnumProperty(name="Продукт", items=items)
+        bpy.types.Scene.products_enum = bpy.props.EnumProperty(name="Продукт", items=items,
+                                                               description="Выберите продукт. "
+                                                                           "Если не понимаете о чем речь, "
+                                                                           "то просто уберите галочку "
+                                                                           "Расширенные настройки",
+                                                               update=update_selected_product)
+        bpy.ops.image.update_image()
         return {'FINISHED'}
-
 
 class CreateProductOperator(Operator):
     """ Кнопка открытия попапа """
@@ -61,11 +69,21 @@ class CreateProductPopupOperator(Operator):
         items = [
             (str(item.get('id')), item.get('name'), 'test') for item in products
         ]
-        bpy.types.Scene.products_enum = bpy.props.EnumProperty(name="Продукт", items=items, default=selected_object)
+
+        bpy.types.Scene.products_enum = bpy.props.EnumProperty(name="Продукт", items=items,
+                                                               description="Выберите продукт. "
+                                                                           "Если не понимаете о чем речь, "
+                                                                           "то просто уберите галочку "
+                                                                           "Расширенные настройки",
+                                                               default=selected_object,
+                                                               update=update_selected_product)
 
     def execute(self, context):
         # container = get_data_container('upload')
-        product, error = APIManager.create_product(context.scene.collections_enum)
+        product, error = APIManager.create_product(context.scene.collections_enum,
+                                                   self.zarbo_product_name,
+                                                   self.zarbo_product_guid
+                                                   )
         # product, error = APIManager.create_product(container.collection_id)
         if error:
             self.report({'ERROR'}, error + f"\ncollection_id: {context.scene.collections_enum}")

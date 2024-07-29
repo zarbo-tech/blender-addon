@@ -84,9 +84,9 @@ def old_register():
                                                                          " модель, то воспользуйтесь этими настройками")
     bpy.types.Scene.widget_url = bpy.props.StringProperty(name="Ссылка", default="",
                                                           description="Откройте на вашем смартфоне")
-    bpy.types.Scene.select_file = bpy.props.BoolProperty(name="Загрузить файл с диска", default=False,
-                                                         description="Если не поставить галочку, то будут отправлены "
-                                                                     "выделенные объекты сцены")
+    # bpy.types.Scene.select_file = bpy.props.BoolProperty(name="Загрузить файл с диска", default=False,
+    #                                                      description="Если не поставить галочку, то будут отправлены "
+    #                                                                  "выделенные объекты сцены")
     bpy.types.Scene.show_api_key = bpy.props.BoolProperty(name="Button Pressed", default=True)
     bpy.types.Scene.products_enum = bpy.props.EnumProperty(name="Продукт", items=[],
                                                            description="Выберите продукт. "
@@ -111,11 +111,10 @@ def old_unregister():
     bpy.utils.unregister_class(CreateCollectionPopupOperator)
     del bpy.types.Scene.use_manage_menu
     del bpy.types.Scene.widget_url
-    del bpy.types.Scene.select_file
+    # del bpy.types.Scene.select_file
     del bpy.types.Scene.show_api_key
     del bpy.types.Scene.collections_enum
     del bpy.types.Scene.products_enum
-
 
 
 from .operators import registered_operators

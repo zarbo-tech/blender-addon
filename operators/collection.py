@@ -8,7 +8,7 @@ from ..managers.api import APIManager
 class UpdateCollectionsOperator(Operator):
     """ Оператор обновления содержимого """
     bl_idname = "object.update_collections"
-    bl_label = "Обновить коллекции"
+    bl_label = "Получить коллекции"
     bl_description = "Запрос к серверу для получения списка Коллекций вашего личного кабинета"
 
     def execute(self, context):
@@ -46,10 +46,10 @@ class CreateCollectionPopupOperator(Operator):
     def invoke(self, context, event):
         return context.window_manager.invoke_props_dialog(self)
 
-    def update_enum(self, context, selected_object):
+    def update_enum(self, context, selected_object: str):
         collections = APIManager.get_collection_list()
         items = [
-            (str(item.get('id')), item.get('name'), 'test') for item in collections
+            (str(item['id']), item['name'], 'test') for item in collections[0]
         ]
         bpy.types.Scene.collections_enum = bpy.props.EnumProperty(name="Коллекция",
                                                                   items=items,
@@ -57,7 +57,14 @@ class CreateCollectionPopupOperator(Operator):
 
     def execute(self, context):
         collection = APIManager.create_collection(self.zarbo_collection_name)
-        self.update_enum(context, collection['id'])
+        # Извлечение ID выбранного объекта и преобразование его в строку
+        if isinstance(collection, tuple):
+            selected_id = collection[0]['id']
+        elif isinstance(collection, dict):
+            selected_id = collection['id']
+        else:
+            raise Exception(f"Не смогли получить идентификатор коллекции. Результат: {collection}")
+        self.update_enum(context, str(selected_id))
         return {'FINISHED'}
 
     def cancel(self, context):

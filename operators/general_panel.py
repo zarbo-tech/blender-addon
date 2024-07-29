@@ -14,7 +14,7 @@ class ZarboPanel(bpy.types.Panel):
 
         scene = context.scene
 
-        layout.prop(context.scene, 'select_file')
+        # layout.prop(context.scene, 'select_file')
 
         # if scene.select_file:
         #     box = layout.box()
@@ -43,6 +43,10 @@ class ZarboPanel(bpy.types.Panel):
         row.operator('object.update_collections')
         row.operator('object.create_collection')
 
+        box = layout.box()
+        row = box.row(align=True)
+        row.prop(scene, "product_search")
+
         box.prop(context.scene, 'products_enum')
 
         row = box.row(align=True)
@@ -56,6 +60,10 @@ class ZarboPanel(bpy.types.Panel):
         row.operator('object.update_model')
         row.operator('object.create_model')
 
+        if scene.my_image:
+            layout.template_ID_preview(scene, "my_image", open="image.open")
+        else:
+            layout.operator("image.load_zarbo_image", text="Загрузить превью продукта")
 
         # else:
         #     box = layout.box()
