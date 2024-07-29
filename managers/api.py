@@ -30,7 +30,7 @@ class APIManager:
 
     @staticmethod
     def create_model(product_id=None, file=None, name=None):
-        name = name or 'Без названия'
+        name = name or f'Без названия {datetime.now().strftime("%d.%m %H:%M")}'
         product_id = product_id if product_id else bpy.context.scene.products_enum
         file = file if file else bpy.context.scene['zarbo_file_content']
         filepath = bpy.context.scene['zarbo_file_name']
@@ -89,13 +89,16 @@ class APIManager:
         return response.json(), errors
 
     @staticmethod
-    def create_product(collection_id):
-        random_name = str(uuid.uuid4())
+    def create_product(collection_id, name=None, guid=None):
+        if name is None:
+            name = "Создано из BLender: " + str(uuid.uuid4())
+        if guid is None:
+            guid = str(uuid.uuid4())
         response = RequestManager.request('POST', api_config.products,
                                           data={
                                               'collection_id': collection_id,
-                                              'guid': random_name,
-                                              'name': random_name
+                                              'guid': name,
+                                              'name': guid
                                           })
         # assert response.status_code == 201, f"Ошибка: %s" % response.json().get('detail')
         # return response.json()
@@ -109,13 +112,16 @@ class APIManager:
         return response.json(), errors
 
     @staticmethod
-    def get_product_list(collection_key=None, collection_id=None):
+    def get_product_list(collection_key=None, collection_id=None, blender_q=None):
         if collection_id:
             response, _ = APIManager.get_collection(collection_id)
             collection_key = response['key']
         url = api_config.products + '?limit=9999999&offset=0'
         if collection_key:
             url += '&collections=%s' % collection_key
+        if blender_q:
+            url += '&blender_q=%s' % blender_q
+        print(url)
         response = RequestManager.request('GET', url)
         # assert response.status_code == 200, f"Ошибка: %s" % response.json().get('detail')
         # return response.json().get('results')

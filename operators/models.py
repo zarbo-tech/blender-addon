@@ -88,7 +88,11 @@ class CreateModelPopupOperator(Operator):
         use_selection = False if self.export_param == 'all' else True
         bpy.ops.export_scene.gltf(export_format='GLB', filepath=filepath, use_selection=use_selection)
         with open(filepath, 'rb') as f:
-            model, _ = APIManager.create_model(context.scene.products_enum, f.read(), self.zarbo_model_name)
+            model, _ = APIManager.create_model(
+                context.scene.products_enum,
+                f.read(),
+                f'{self.zarbo_model_name} {datetime.now().strftime("%d.%m %H:%M")}'
+            )
         temp_manager.cleanup()
 
         self.update_enum(context, str(model['id']))

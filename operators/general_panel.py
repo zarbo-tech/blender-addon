@@ -43,6 +43,10 @@ class ZarboPanel(bpy.types.Panel):
         row.operator('object.update_collections')
         row.operator('object.create_collection')
 
+        box = layout.box()
+        row = box.row(align=True)
+        row.prop(scene, "product_search")
+
         box.prop(context.scene, 'products_enum')
 
         row = box.row(align=True)

@@ -52,9 +52,10 @@ class UpdateImageOperator(bpy.types.Operator):
 
     def execute(self, context):
         img_path = None
-        product, _ = APIManager.get_product(context.scene.products_enum)
-        if product["preview"]:
-            img_path = download_file(product["preview"])
+        if context.scene.products_enum:
+            product, _ = APIManager.get_product(context.scene.products_enum)
+            if product["preview"]:
+                img_path = download_file(product["preview"])
         if img_path is None:
             img_path = context.scene.path_image
         if os.path.exists(img_path):

@@ -59,6 +59,11 @@ def register_props():
                                                                           "Расширенные настройки")
     attrs.append(bpy.types.Scene.models_enum)
 
+    bpy.types.Scene.product_search = bpy.props.StringProperty(name="Поиск продукта",
+                                                          description="Получение продуктов по элементу поиска",
+                                                          default="")
+    attrs.append(bpy.types.Scene.product_search)
+
     bpy.types.Scene.path_image = bpy.props.StringProperty(name="Путь до картинки",
                                                           description="Путь до превью, чтобы отобразить картинку",
                                                           default=os.path.join(get_addon_directory(), 'logo.png'))
