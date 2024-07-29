@@ -214,10 +214,10 @@ class APIManager:
                   data={'file': name, "additional_data": "3d ar_android ar_ios"},
                   # headers=http_headers,
                   files={'file': (name, file)})
-
-            def oops(self, context):
-                self.layout.label(text=str(response.__dict__))
-
-            bpy.context.window_manager.popup_menu(oops, title="Error", icon='ERROR')
             errors = APIManager.check_errors(response)
+            if errors:
+                def oops(self, context):
+                    self.layout.label(text=str(response.__dict__))
+
+                bpy.context.window_manager.popup_menu(oops, title="Error", icon='ERROR')
             return response.json(), errors

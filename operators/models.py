@@ -32,6 +32,7 @@ class UpdateModelsOperator(Operator):
     def execute(self, context):
         models, errors = APIManager.get_models(context.scene.products_enum)
         if errors:
+            print('SADSAAD')
             self.report({"ERROR"}, errors)
         items = [
             (str(item.get('id')), item.get('name'), 'test') for item in models
