@@ -111,9 +111,19 @@ class APIManager:
         errors = APIManager.check_errors(response)
         return response.json(), errors
 
+
+    @staticmethod
+    def get_collections():
+        response = RequestManager.request('GET', api_config.collections)
+        errors = APIManager.check_errors(response)
+        data = response.json()
+        if data[0]:
+            return data[0]['id'], errors
+        raise Exception(f"Отсутствуют коллекции у пользователя")
+
+
     @staticmethod
     def get_product_list(collection_key=None, collection_id=None, blender_q=None):
-        print(api_config.products)
         if collection_id:
             response, _ = APIManager.get_collection(collection_id)
             collection_key = response['key']
@@ -122,7 +132,6 @@ class APIManager:
             url += '&collections=%s' % collection_key
         if blender_q:
             url += '&blender_q=%s' % blender_q
-        print(url)
         response = RequestManager.request('GET', url)
         # assert response.status_code == 200, f"Ошибка: %s" % response.json().get('detail')
         # return response.json().get('results')

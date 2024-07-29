@@ -13,7 +13,6 @@ class UpdateProductsOperator(Operator):
     bl_description = "Запрос к серверу для получения списка Продуктов вашего личного кабинета"
 
     def execute(self, context):
-        print(context.scene.product_search)
         # access_token = bpy.context.scene['zarbo_access_token']
         # container = get_data_container('upload')
         # key = container.collection_key = container.collection_key or context.scene.collections_enum
@@ -80,9 +79,13 @@ class CreateProductPopupOperator(Operator):
 
     def execute(self, context):
         # container = get_data_container('upload')
-        product, error = APIManager.create_product(context.scene.collections_enum,
-                                                   self.zarbo_product_name,
-                                                   self.zarbo_product_guid
+        if context.scene.collections_enum:
+            collection_id = context.scene.collections_enum
+        else:
+            collection_id, _ = APIManager.get_collections()
+        product, error = APIManager.create_product(collection_id,
+                                                   name=self.zarbo_product_name,
+                                                   guid=self.zarbo_product_guid
                                                    )
         # product, error = APIManager.create_product(container.collection_id)
         if error:
