@@ -7,7 +7,7 @@ from ..managers.temp import TempManager
 class SendFileOperator(Operator):
     """ Оператор отправки файла """
     bl_idname = "object.send_file"
-    bl_label = "Получить ссылку"
+    bl_label = "Получить и скопировать ссылку"
     bl_description = "Отправить файл в личный кабинет и получить ссылку"
 
     def execute_old(self, context):
